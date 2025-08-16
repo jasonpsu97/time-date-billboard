@@ -5,20 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Current Time and Date</title>
   <style>
-    /* Page (outside the 288x144) stays gray */
+    :root {
+      --pulse-speed: 4s; /* adjust this: 2s = fast flicker, 6s = slow breathing */
+    }
+
     body {
       margin: 0;
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #333;           /* gray outside the display */
+      background: #333; /* outside stays gray */
       font-family: Arial, sans-serif;
       color: #fff;
-      background-image: none !important; /* guard against old CSS still cached */
     }
 
-    /* 288x144 display with ONLY the .webp as background */
     #clock-app {
       width: 288px;
       height: 144px;
@@ -31,21 +32,33 @@
       position: relative;
       overflow: hidden;
 
-      /* the image is ONLY inside this box */
       background: url("background.webp") center center no-repeat;
       background-size: 100% 100%;
 
-      /* Neon red glow effect */
-      box-shadow:
-        0 0 10px rgba(255, 0, 0, 0.8),
-        0 0 20px rgba(255, 0, 0, 0.7),
-        0 0 40px rgba(255, 0, 0, 0.6),
-        0 0 60px rgba(255, 0, 0, 0.5);
+      /* Neon red glow animation */
+      animation: pulseGlow var(--pulse-speed) infinite alternate;
     }
 
-    /* Frosted glass effect behind the text */
+    /* Neon glow keyframes */
+    @keyframes pulseGlow {
+      0% {
+        box-shadow:
+          0 0 5px rgba(255, 0, 0, 0.9),
+          0 0 15px rgba(255, 0, 0, 0.8),
+          0 0 30px rgba(255, 0, 0, 0.7),
+          0 0 50px rgba(255, 0, 0, 0.6);
+      }
+      100% {
+        box-shadow:
+          0 0 15px rgba(255, 0, 0, 1),
+          0 0 35px rgba(255, 0, 0, 0.9),
+          0 0 60px rgba(255, 0, 0, 0.8),
+          0 0 90px rgba(255, 0, 0, 0.7);
+      }
+    }
+
     .text-box {
-      background: rgba(255,255,255,0.12);       /* light translucent layer */
+      background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255,255,255,0.25);
@@ -53,13 +66,13 @@
       padding: 6px 12px;
     }
 
-    /* Fallback if backdrop-filter isn’t supported */
     @supports not ((backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px))) {
       .text-box { background: rgba(0,0,0,0.45); }
     }
 
     #day, #date {
       font-size: 26px;
+      font-family: Arial, sans-serif;
       font-weight: 700;
       text-transform: uppercase;
       margin: 2px 0;
@@ -67,6 +80,7 @@
 
     #time {
       font-size: 40px;
+      font-family: Arial, sans-serif;
       margin: 4px 0;
       font-weight: 800;
     }
