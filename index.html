@@ -20,26 +20,26 @@
       color: #fff;
     }
 
+    /* Slightly smaller display so glow shows at edges */
     #clock-app {
-      width: 288px;
-      height: 144px;
+      width: 270px;    /* slightly smaller than 288 */
+      height: 135px;   /* slightly smaller than 144 */
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 8px;
-      border-radius: 20px;
+      border-radius: 18px;
       text-align: center;
       position: relative;
-      overflow: hidden;
+      overflow: visible;   /* allow glow outside box */
 
       background: url("background.webp") center center no-repeat;
       background-size: 100% 100%;
 
-      /* Neon red glow animation */
       animation: pulseGlow var(--pulse-speed) infinite alternate;
     }
 
-    /* Stronger neon glow keyframes for noticeable pulsing */
+    /* Neon glow keyframes */
     @keyframes pulseGlow {
       0% {
         box-shadow:
