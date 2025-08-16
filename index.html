@@ -5,44 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Current Time and Date</title>
   <style>
+    /* Page (outside the 288x144) stays gray */
     body {
-      background-color: #333; /* gray background outside the display */
+      margin: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      background: #333;           /* gray outside the display */
       font-family: Arial, sans-serif;
-      color: white;
+      color: #fff;
+      background-image: none !important; /* guard against old CSS still cached */
     }
 
+    /* 288x144 display with ONLY the .webp as background */
     #clock-app {
       width: 288px;
       height: 144px;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 8px;
       border-radius: 10px;
       text-align: center;
-      background: url("background.webp") no-repeat center center;
-      background-size: cover;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+
+      /* the image is ONLY inside this box */
+      background: url("background.webp") center center no-repeat;
+      background-size: 100% 100%; /* exact 288x144 fit */
     }
 
+    /* Frosted glass effect behind the text */
     .text-box {
-      background: rgba(255, 255, 255, 0.15); /* light transparent layer */
-      backdrop-filter: blur(6px); /* frosted effect */
-      -webkit-backdrop-filter: blur(6px); /* Safari support */
-      padding: 5px 10px;
+      background: rgba(255,255,255,0.12);       /* light translucent layer */
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.25);
       border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.3); /* subtle frosted border */
+      padding: 6px 12px;
+    }
+
+    /* Fallback if backdrop-filter isn’t supported */
+    @supports not ((backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px))) {
+      .text-box { background: rgba(0,0,0,0.45); }
     }
 
     #day, #date {
       font-size: 26px;
-      font-weight: bold;
+      font-weight: 700;
       text-transform: uppercase;
       margin: 2px 0;
     }
@@ -50,7 +62,7 @@
     #time {
       font-size: 40px;
       margin: 4px 0;
-      font-weight: bold;
+      font-weight: 800;
     }
   </style>
 </head>
@@ -66,12 +78,9 @@
   <script>
     function updateClock() {
       const now = new Date();
-
-      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-      const months = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-      ];
+      const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const months = ['January','February','March','April','May','June',
+                      'July','August','September','October','November','December'];
 
       const day = days[now.getDay()];
       const monthName = months[now.getMonth()];
@@ -79,16 +88,13 @@
       const year = now.getFullYear();
 
       let hours = now.getHours();
-      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2,'0');
       const ampm = hours >= 12 ? 'PM' : 'AM';
       hours = hours % 12 || 12;
 
-      const time = `${hours}:${minutes} ${ampm}`;
-      const dateString = `${monthName} ${date}, ${year}`;
-
       document.getElementById('day').textContent = day.toUpperCase();
-      document.getElementById('time').textContent = time;
-      document.getElementById('date').textContent = dateString.toUpperCase();
+      document.getElementById('time').textContent = `${hours}:${minutes} ${ampm}`;
+      document.getElementById('date').textContent = `${monthName} ${date}, ${year}`.toUpperCase();
     }
 
     updateClock();
