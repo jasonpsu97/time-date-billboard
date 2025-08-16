@@ -6,7 +6,7 @@
   <title>Current Time and Date</title>
   <style>
     :root {
-      --pulse-speed: 2s; /* adjust this: 2s = fast flicker, 6s = slow breathing */
+      --pulse-speed: 4s; /* adjust: 2s = fast flicker, 6s = slow breathing */
     }
 
     body {
@@ -15,7 +15,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #333; /* outside stays gray */
+      background: #333; /* gray outside display */
       font-family: Arial, sans-serif;
       color: #fff;
     }
@@ -39,21 +39,20 @@
       animation: pulseGlow var(--pulse-speed) infinite alternate;
     }
 
-    /* Neon glow keyframes */
+    /* Stronger neon glow keyframes for noticeable pulsing */
     @keyframes pulseGlow {
       0% {
         box-shadow:
-          0 0 5px rgba(255, 0, 0, 0.9),
-          0 0 15px rgba(255, 0, 0, 0.8),
-          0 0 30px rgba(255, 0, 0, 0.7),
-          0 0 50px rgba(255, 0, 0, 0.6);
+          0 0 2px rgba(255, 0, 0, 0.4),
+          0 0 6px rgba(255, 0, 0, 0.3),
+          0 0 12px rgba(255, 0, 0, 0.2);
       }
       100% {
         box-shadow:
           0 0 15px rgba(255, 0, 0, 1),
-          0 0 35px rgba(255, 0, 0, 0.9),
-          0 0 60px rgba(255, 0, 0, 0.8),
-          0 0 90px rgba(255, 0, 0, 0.7);
+          0 0 35px rgba(255, 0, 0, 1),
+          0 0 70px rgba(255, 0, 0, 0.9),
+          0 0 120px rgba(255, 0, 0, 0.8);
       }
     }
 
@@ -122,4 +121,3 @@
   </script>
 </body>
 </html>
-
