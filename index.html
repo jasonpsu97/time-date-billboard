@@ -35,7 +35,7 @@
       background: url("background.webp") center center no-repeat;
       background-size: 100% 100%;
 
-      /* Inset neon red glow with animation */
+      /* Inset neon blue glow with animation */
       animation: pulseGlow var(--pulse-speed) infinite alternate;
     }
 
@@ -44,7 +44,7 @@
         box-shadow:
           inset 0 0 5px rgba(0, 0, 255, 0.3),
           inset 0 0 15px rgba(0, 0, 255, 0.2),
-          inset 0 0 25px rgba(, 0, 255, 0.1);
+          inset 0 0 25px rgba(0, 0, 255, 0.1); /* fixed typo */
       }
       100% {
         box-shadow:
@@ -93,31 +93,41 @@
   </div>
 
   <script>
-    function updateClock() {
-      const now = new Date();
-      const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-      const months = ['January','February','March','April','May','June',
-                      'July','August','September','October','November','December'];
+    // Formatter for Eastern Time
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York',
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
 
-      const day = days[now.getDay()];
-      const monthName = months[now.getMonth()];
-      const date = now.getDate();
-      const year = now.getFullYear();
+    function renderET() {
+      const parts = Object.fromEntries(fmt.formatToParts(new Date()).map(p => [p.type, p.value]));
 
-      let hours = now.getHours();
-      const minutes = String(now.getMinutes()).padStart(2,'0');
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12 || 12;
+      const day = (parts.weekday || '').toUpperCase();
+      const time = `${parts.hour}:${parts.minute} ${parts.dayPeriod}`;
+      const date = `${parts.month} ${parts.day}, ${parts.year}`.toUpperCase();
 
-      document.getElementById('day').textContent = day.toUpperCase();
-      document.getElementById('time').textContent = `${hours}:${minutes} ${ampm}`;
-      document.getElementById('date').textContent = `${monthName} ${date}, ${year}`.toUpperCase();
+      document.getElementById('day').textContent = day;
+      document.getElementById('time').textContent = time;
+      document.getElementById('date').textContent = date;
     }
 
-    updateClock();
-    setInterval(updateClock, 1000);
+    function tick() {
+      renderET();
+      const delay = 1000 - (Date.now() % 1000); // align updates to the real second
+      setTimeout(tick, delay);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) renderET(); // snap back if tab regains focus
+    });
+
+    tick();
   </script>
 </body>
 </html>
-
-
